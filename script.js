@@ -241,3 +241,49 @@ document.addEventListener("DOMContentLoaded", () => {
       esconderPainel();
     });
 });
+
+
+const hamburgers = document.getElementById("menu-hamburgers");
+const bebidas = document.getElementById("menu-bebidas");
+
+fetch("http://localhost:3000/produtos")
+  .then(res => res.json())
+  .then(produtos => {
+    produtos.forEach(produto => {
+      const div = document.createElement("div");
+      div.className = "flex gap-2";
+
+      div.innerHTML = `
+        <img
+          src="${produto.imagem}"
+          alt="${produto.nome}"
+          class="w-28 h-28 rounded-md hover:scale-110 hover:-rotate-2 duration-300"
+        />
+
+        <div>
+          <p class="font-bold">${produto.nome}</p>
+
+          ${produto.descricao ? `<p class="text-sm">${produto.descricao}</p>` : ""}
+
+          <div class="flex items-center gap-2 justify-between mt-3">
+            <p class="font-bold text-lg">R$ ${produto.preco.toFixed(2)}</p>
+            <button
+              class="bg-gray-900 px-5 h-7 rounded flex items-center justify-center add-to-cart-btn"
+              data-name="${produto.nome}"
+              data-price="${produto.preco}"
+            >
+              <i class="fa fa-cart-plus text-lg text-white"></i>
+            </button>
+          </div>
+        </div>
+      `;
+
+      if (produto.categoria === "hamburger") {
+        hamburgers.appendChild(div);
+      }
+
+      if (produto.categoria === "bebida") {
+        bebidas.appendChild(div);
+      }
+    });
+  });
