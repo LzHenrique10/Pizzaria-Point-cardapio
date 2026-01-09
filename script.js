@@ -13,29 +13,37 @@ const addrressWarn = document.getElementById("address-warn");
 let cart = [];
 
 // Abrir carrinho
-cartBtn.addEventListener("click", () => {
-  updateCartModal();
-  cartModal.style.display = "flex";
-});
+if (cartBtn) {
+  cartBtn.addEventListener("click", () => {
+    updateCartModal();
+    cartModal.style.display = "flex";
+  });
+}
 
 // Fechar carrinho
-cartModal.addEventListener("click", (e) => {
-  if (e.target === cartModal) cartModal.style.display = "none";
-});
+if (cartModal) {
+  cartModal.addEventListener("click", (e) => {
+    if (e.target === cartModal) cartModal.style.display = "none";
+  });
+}
 
-closeModalBtn.addEventListener("click", () => {
-  cartModal.style.display = "none";
-});
+if (closeModalBtn) {
+  closeModalBtn.addEventListener("click", () => {
+    cartModal.style.display = "none";
+  });
+}
 
 // Adicionar item
-menu.addEventListener("click", (event) => {
-  const parentButton = event.target.closest(".add-to-cart-btn");
-  if (!parentButton) return;
+if (menu) {
+  menu.addEventListener("click", (event) => {
+    const parentButton = event.target.closest(".add-to-cart-btn");
+    if (!parentButton) return;
 
-  const name = parentButton.dataset.name;
-  const price = parseFloat(parentButton.dataset.price);
-  addToCart(name, price);
-});
+    const name = parentButton.dataset.name;
+    const price = parseFloat(parentButton.dataset.price);
+    addToCart(name, price);
+  });
+}
 
 function addToCart(name, price) {
   const item = cart.find((i) => i.name === name);
@@ -62,7 +70,7 @@ function updateCartModal() {
           <p>Quantidade (${item.quantity})</p>
           <p class="font-medium mt-2">R$ ${item.price.toFixed(2)}</p>
         </div>
-        <button class="remove-from-cart-btn" data-name="${item.name}">
+        <button class="remove-from-cart-btn text-red-500" data-name="${item.name}">
           Remover
         </button>
       </div>
@@ -78,11 +86,13 @@ function updateCartModal() {
   cartCount.textContent = cart.length;
 }
 
-cartItemsConteiner.addEventListener("click", (e) => {
-  if (e.target.classList.contains("remove-from-cart-btn")) {
-    removeItemCart(e.target.dataset.name);
-  }
-});
+if (cartItemsConteiner) {
+  cartItemsConteiner.addEventListener("click", (e) => {
+    if (e.target.classList.contains("remove-from-cart-btn")) {
+      removeItemCart(e.target.dataset.name);
+    }
+  });
+}
 
 function removeItemCart(name) {
   const index = cart.findIndex((i) => i.name === name);
@@ -95,106 +105,139 @@ function removeItemCart(name) {
 }
 
 // Endereço
-addrressIpunt.addEventListener("input", () => {
-  addrressIpunt.classList.remove("border-red-500");
-  addrressWarn.classList.add("hidden");
-});
+if (addrressIpunt) {
+  addrressIpunt.addEventListener("input", () => {
+    addrressIpunt.classList.remove("border-red-500");
+    addrressWarn.classList.add("hidden");
+  });
+}
 
 // Finalizar pedido
-checkoutBtn.addEventListener("click", () => {
-  if (!checkoutRestaurantOpen()) {
-    Toastify({
-      text: "Ops o restaurante está fechado!",
-      duration: 3000,
-      style: { background: "#ef4444" },
-    }).showToast();
-    return;
-  }
+if (checkoutBtn) {
+  checkoutBtn.addEventListener("click", () => {
+    if (!checkoutRestaurantOpen()) {
+      Toastify({
+        text: "Ops o restaurante está fechado!",
+        duration: 3000,
+        style: { background: "#ef4444" },
+      }).showToast();
+      return;
+    }
 
-  if (!cart.length) return;
-  if (!addrressIpunt.value) {
-    addrressWarn.classList.remove("hidden");
-    addrressIpunt.classList.add("border-red-500");
-    return;
-  }
+    if (!cart.length) return;
 
-  const message = encodeURIComponent(
-    cart.map((i) => `${i.name} (${i.quantity})`).join(" | ")
-  );
+    if (!addrressIpunt.value) {
+      addrressWarn.classList.remove("hidden");
+      addrressIpunt.classList.add("border-red-500");
+      return;
+    }
 
-  window.open(
-    `https://wa.me/85992871308?text=${message} Endereço: ${addrressIpunt.value}`,
-    "_blank"
-  );
+    const message = encodeURIComponent(
+      cart.map((i) => `${i.name} (${i.quantity})`).join(" | ")
+    );
 
-  cart = [];
-  updateCartModal();
-});
+    window.open(
+      `https://wa.me/85992871308?text=${message} Endereço: ${addrressIpunt.value}`,
+      "_blank"
+    );
 
-// Horário
+    cart = [];
+    updateCartModal();
+  });
+}
+
+// Horário funcionamento
 function checkoutRestaurantOpen() {
   const h = new Date().getHours();
   return h >= 18 && h < 22;
 }
 
 const spanItem = document.getElementById("date-span");
-spanItem.classList.toggle("bg-green-600", checkoutRestaurantOpen());
-spanItem.classList.toggle("bg-red-500", !checkoutRestaurantOpen());
+if (spanItem) {
+  spanItem.classList.toggle("bg-green-600", checkoutRestaurantOpen());
+  spanItem.classList.toggle("bg-red-500", !checkoutRestaurantOpen());
+}
 
 // ================== MENU LATERAL ==================
 const menuBtn = document.getElementById("menuBtn");
 const menuModal = document.getElementById("menu-modal");
 const closeMenu = document.getElementById("close-menu");
 
-// Abrir menu
-menuBtn.addEventListener("click", () => {
-  menuModal.classList.remove("hidden");
-});
+if (menuModal) menuModal.classList.add("hidden");
 
-menuModal.addEventListener("click", (e) => {
-  if (e.target === menuModal) menuModal.classList.add("hidden");
-});
+if (menuBtn) {
+  menuBtn.addEventListener("click", () => {
+    menuModal.classList.remove("hidden");
+  });
+}
 
-closeMenu.addEventListener("click", () => {
-  menuModal.classList.add("hidden");
-});
+if (menuModal) {
+  menuModal.addEventListener("click", (e) => {
+    if (e.target === menuModal) menuModal.classList.add("hidden");
+  });
+}
+
+if (closeMenu) {
+  closeMenu.addEventListener("click", () => {
+    menuModal.classList.add("hidden");
+  });
+}
 
 // ================== LOGIN / ADMIN ==================
 const emailInput = document.getElementById("emailInput");
+const passwordInput = document.getElementById("passwordInput");
 const loginBtn = document.getElementById("loginBtn");
 const painelMenu = document.getElementById("admin-painel-menu");
 
 function mostrarPainel() {
-  painelMenu.classList.remove("hidden");
+  if (painelMenu) painelMenu.classList.remove("hidden");
 }
 
 function esconderPainel() {
-  painelMenu.classList.add("hidden");
+  if (painelMenu) painelMenu.classList.add("hidden");
 }
 
-loginBtn.addEventListener("click", () => {
-  fetch("http://localhost:3000/login", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ email: emailInput.value }),
-  })
-    .then((res) => res.json())
-    .then((data) => {
-      if (data.isAdmin) {
-        localStorage.setItem("isAdmin", "true");
+// Login
+if (loginBtn) {
+  loginBtn.addEventListener("click", () => {
+    fetch("http://localhost:3000/admin/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        email: emailInput.value,
+        senha: passwordInput.value,
+      }),
+    })
+      .then(async (res) => {
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error);
+
+        localStorage.setItem("token", data.token);
         mostrarPainel();
         alert("Acesso liberado 😎");
-      } else {
-        localStorage.removeItem("isAdmin");
+      })
+      .catch((err) => {
+        localStorage.removeItem("token");
         esconderPainel();
-        alert("Você não tem acesso");
-      }
-    });
-});
+        alert(err.message || "Acesso negado");
+      });
+  });
+}
 
-// Manter estado ao recarregar
+// Manter login após refresh
 document.addEventListener("DOMContentLoaded", () => {
-  localStorage.getItem("isAdmin") === "true"
-    ? mostrarPainel()
-    : esconderPainel();
+  const token = localStorage.getItem("token");
+  if (!token) return esconderPainel();
+
+  fetch("http://localhost:3000/admin", {
+    headers: { Authorization: "Bearer " + token },
+  })
+    .then((res) => {
+      if (!res.ok) throw new Error();
+      mostrarPainel();
+    })
+    .catch(() => {
+      localStorage.removeItem("token");
+      esconderPainel();
+    });
 });
