@@ -152,38 +152,32 @@
     </div>
     <!--FIM MODAL CART-->
 
-    <!-- MODAL IDENTIFICAÇÃO CLIENTE -->
+    <!-- MODAL DADOS CLIENTE -->
     <div
       id="cliente-modal"
-      class="hidden fixed inset-0 bg-black/60 z-[100] flex items-center justify-center"
+      class="bg-black/60 w-full h-full fixed top-0 left-0 z-[100] hidden items-center justify-center"
     >
-      <div class="bg-white p-5 rounded-md w-[90%] max-w-md">
-        <h2 class="text-xl font-bold mb-3">Identificação</h2>
+      <div class="bg-white p-5 rounded-md min-w-[90%] md:min-w-[400px]">
+        <h2 class="font-bold text-xl mb-3 text-center">Seus dados</h2>
 
-        <input
-          id="cliente-nome"
-          placeholder="Seu nome"
-          class="w-full border p-2 mb-2"
-        />
+        <p class="font-bold">Nome:</p>
+        <input id="cliente-nome" class="w-full border p-1 rounded mb-2" />
 
-        <input
-          id="cliente-telefone"
-          placeholder="Telefone"
-          class="w-full border p-2 mb-4"
-        />
+        <p class="font-bold">Telefone:</p>
+        <input id="cliente-telefone" class="w-full border p-1 rounded mb-4" />
 
-        <button
-          id="continuar-sem-login"
-          class="bg-green-500 text-white w-full py-2 rounded mb-2"
-        >
-          Continuar sem login
-        </button>
-
-        <button id="ir-login" class="w-full text-blue-600 underline">
-          Entrar ou criar conta
-        </button>
+        <div class="flex justify-between">
+          <button id="cancel-cliente">Cancelar</button>
+          <button
+            id="confirmar-cliente"
+            class="bg-green-500 text-white px-4 py-1 rounded"
+          >
+            Confirmar
+          </button>
+        </div>
       </div>
     </div>
+    <!-- FIM MODAL DADOS CLIENTE -->
 
     <!--BUTTON CAR FOOTER-->
     <footer

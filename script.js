@@ -15,7 +15,7 @@ const pagamentoSelect = document.getElementById("pagamento");
 const clienteModal = document.getElementById("cliente-modal");
 const clienteNomeInput = document.getElementById("cliente-nome");
 const clienteTelefoneInput = document.getElementById("cliente-telefone");
-const salvarClienteBtn = document.getElementById("salvar-cliente-btn");
+const salvarClienteBtn = document.getElementById("continuar-sem-login");
 
 let cart = [];
 
@@ -112,7 +112,9 @@ function updateCartModal() {
           <p>Quantidade (${item.quantity})</p>
           <p class="font-medium mt-2">R$ ${item.price.toFixed(2)}</p>
         </div>
-        <button class="remove-from-cart-btn text-red-500" data-name="${item.name}">
+        <button class="remove-from-cart-btn text-red-500" data-name="${
+          item.name
+        }">
           Remover
         </button>
       </div>
@@ -195,6 +197,15 @@ if (checkoutBtn) {
       total: cart.reduce((sum, i) => sum + i.price * i.quantity, 0),
     };
 
+    if (!pagamentoSelect.value) {
+      Toastify({
+        text: "Escolha uma forma de pagamento",
+        duration: 3000,
+        style: { background: "#ef4444" },
+      }).showToast();
+      return;
+    }
+
     fetch("http://localhost:3000/pedidos", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -218,7 +229,7 @@ if (checkoutBtn) {
 // ================== HORÁRIO ==================
 function checkoutRestaurantOpen() {
   const h = new Date().getHours();
-  return h >= 18 && h < 22;
+  return h >= 10 && h < 22;
 }
 
 // ================== PRODUTOS ==================
@@ -236,7 +247,11 @@ fetch("http://localhost:3000/produtos")
         <img src="${produto.imagem}" class="w-28 h-28 rounded-md" />
         <div>
           <p class="font-bold">${produto.nome}</p>
-          ${produto.descricao ? `<p class="text-sm">${produto.descricao}</p>` : ""}
+          ${
+            produto.descricao
+              ? `<p class="text-sm">${produto.descricao}</p>`
+              : ""
+          }
           <div class="flex justify-between mt-3">
             <p class="font-bold">R$ ${produto.preco.toFixed(2)}</p>
             <button class="add-to-cart-btn bg-gray-900 px-5 h-7 rounded"
@@ -253,7 +268,7 @@ fetch("http://localhost:3000/produtos")
     });
   });
 
-  // ================== HORÁRIO (COR VERDE / VERMELHA) ==================
+// ================== HORÁRIO (COR VERDE / VERMELHA) ==================
 const spanItem = document.getElementById("date-span");
 if (spanItem) {
   spanItem.classList.toggle("bg-green-600", checkoutRestaurantOpen());
@@ -345,3 +360,73 @@ document.addEventListener("DOMContentLoaded", () => {
       esconderPainel();
     });
 });
+
+checkoutBtn.addEventListener("click", function () {
+  const address = document.getElementById("address").value;
+  const pagamento = document.getElementById("pagamento").value;
+  const nome = document.getElementById("nome").value;
+  const telefone = document.getElementById("telefone").value;
+
+  console.log({
+    nome,
+    telefone,
+    address,
+    pagamento,
+    cart,
+  });
+});
+
+
+// ================== CONFIRMAR CLIENTE ==================
+const confirmarClienteBtn = document.getElementById("confirmar-cliente");
+const cancelarClienteBtn = document.getElementById("cancel-cliente");
+
+if (confirmarClienteBtn) {
+  confirmarClienteBtn.addEventListener("click", async () => {
+    const nome = document.getElementById("cliente-nome").value;
+    const telefone = document.getElementById("cliente-telefone").value;
+    const address = document.getElementById("address").value;
+    const pagamento = document.getElementById("pagamento").value;
+
+    if (!nome || !telefone || !address || !pagamento) {
+      alert("Preencha todos os campos");
+      return;
+    }
+
+    const pedido = {
+      nome,
+      telefone,
+      endereco: address,
+      pagamento,
+      itens: cart.map((item) => ({
+        nome: item.name,
+        quantidade: item.quantity,
+        preco: item.price,
+      })),
+      total: cart.reduce((sum, i) => sum + i.price * i.quantity, 0),
+    };
+
+    await fetch("http://localhost:3000/pedidos", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(pedido),
+    });
+
+    alert("Pedido enviado com sucesso!");
+
+    cart = [];
+    updateCartModal();
+
+    document.getElementById("cliente-modal").classList.add("hidden");
+    document.getElementById("cart-modal").classList.add("hidden");
+  });
+}
+
+if (cancelarClienteBtn) {
+  cancelarClienteBtn.addEventListener("click", () => {
+    document.getElementById("cliente-modal").classList.add("hidden");
+  });
+}
+
