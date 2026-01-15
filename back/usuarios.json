@@ -1,0 +1,17 @@
+[
+  {
+    "id": 1,
+    "nome": "Dona da pizzaria",
+    "email": "admin@gmail.com",
+    "senha": "123456",
+    "role": "admin"
+  },
+  {
+    "id": 2,
+    "nome": "Cliente Teste",
+    "email": "cliente@gmail.com",
+    "senha": "123456",
+    "telefone": "85999999999",
+    "role": "cliente"
+  }
+]

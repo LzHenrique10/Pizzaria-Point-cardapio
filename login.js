@@ -1,0 +1,32 @@
+function login() {
+  const emailInput = document.getElementById("email");
+  const senhaInput = document.getElementById("senha");
+
+  fetch("http://localhost:3000/login", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      email: emailInput.value,
+      senha: senhaInput.value
+    })
+  })
+    .then(res => {
+      if (!res.ok) throw new Error("Erro de login");
+      return res.json();
+    })
+    .then(data => {
+      localStorage.setItem("token", data.token);
+      localStorage.setItem("role", data.role);
+
+      if (data.role === "admin") {
+        window.location.href = "admin.html";
+      } else {
+        window.location.href = "index.html";
+      }
+    })
+    .catch(() => {
+      alert("Email ou senha incorretos");
+    });
+}

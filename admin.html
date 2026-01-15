@@ -1,50 +1,64 @@
-<body>
-  <h1>Painel de Controle 🔧</h1>
-  <button id="logoutBtn">Sair</button>
-
-  <h2>Pedidos recebidos</h2>
-  <div id="pedidos"></div>
-
-  <script>
-    const token = localStorage.getItem("token");
-    if (!token) {
-      window.location.href = "/";
-    }
-
-    fetch("http://localhost:3000/admin/pedidos", {
-      headers: {
-        Authorization: "Bearer " + token
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Painel da Dona</title>
+    <style>
+      body {
+        font-family: Arial;
+        background: #111;
+        color: white;
+        padding: 20px;
       }
-    })
-    .then(res => res.json())
-    .then(pedidos => {
-      const container = document.getElementById("pedidos");
+      input,
+      select,
+      button {
+        padding: 8px;
+        margin: 4px 0;
+        width: 100%;
+      }
+      .card {
+        background: #1f1f1f;
+        padding: 15px;
+        margin-bottom: 20px;
+        border-radius: 8px;
+      }
+    </style>
+  </head>
+  <body>
+    <button onclick="window.location.href='index.html'">
+      ⬅ Voltar ao cardápio
+    </button>
 
-      pedidos.reverse().forEach(p => {
-        const div = document.createElement("div");
-        div.style.border = "1px solid #000";
-        div.style.padding = "10px";
-        div.style.marginBottom = "10px";
+    <h1>🍔 Painel da Dona</h1>
 
-        div.innerHTML = `
-          <strong>Cliente:</strong> ${p.nome}<br>
-          <strong>Endereço:</strong> ${p.endereco}<br>
-          <strong>Pagamento:</strong> ${p.pagamento}<br>
-          <strong>Itens:</strong>
-          <ul>
-            ${p.itens.map(i => `<li>${i.nome} x${i.quantidade}</li>`).join("")}
-          </ul>
-          <strong>Total:</strong> R$ ${p.total.toFixed(2)}<br><br>
-          <button onclick="window.print()">Imprimir 🖨️</button>
-        `;
+    <div class="card">
+      <h2>Pedidos</h2>
+      <div id="pedidos"></div>
+    </div>
 
-        container.appendChild(div);
-      });
-    });
+    <div class="card">
+      <h2>Cadastrar Produto</h2>
 
-    document.getElementById("logoutBtn").onclick = () => {
-      localStorage.removeItem("token");
-      window.location.href = "/";
-    };
-  </script>
-</body>
+      <input id="nome" placeholder="Nome do produto" />
+      <input id="descricao" placeholder="Descrição" />
+      <input id="preco" type="number" step="0.01" placeholder="Preço" />
+      <input id="imagem" placeholder="URL da imagem" />
+
+      <select id="categoria">
+        <option value="">Categoria</option>
+        <option value="hamburger">Hamburger</option>
+        <option value="bebida">Bebida</option>
+      </select>
+
+      <button onclick="cadastrarProduto()">Cadastrar</button>
+    </div>
+
+    <div class="card">
+      <h2>Produtos</h2>
+      <div id="lista-produtos"></div>
+    </div>
+
+    <script src="./admin.js" defer></script>
+  </body>
+</html>

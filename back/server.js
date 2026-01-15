@@ -14,26 +14,52 @@ const produtosPath = path.join(__dirname, "produtos.json");
 const pedidosPath = path.join(__dirname, "pedidos.json");
 
 // ================= LOGIN ADMIN =================
-app.post("/admin/login", (req, res) => {
+
+const usuariosPath = path.join(__dirname, "usuarios.json");
+
+app.post("/login", (req, res) => {
   const { email, senha } = req.body;
 
-  if (email === "admin@gmail.com" && senha === "123456") {
-    const token = jwt.sign({ role: "admin" }, SECRET, { expiresIn: "2h" });
-    return res.json({ token });
+  const usuarios = JSON.parse(fs.readFileSync(usuariosPath));
+
+  const user = usuarios.find((u) => u.email === email && u.senha === senha);
+
+  if (!user) {
+    return res.status(401).json({ error: "Credenciais inválidas" });
   }
 
-  res.status(401).json({ error: "Credenciais inválidas" });
+  const token = jwt.sign({ id: user.id, role: user.role }, SECRET, {
+    expiresIn: "1d",
+  });
+
+  res.json({
+    token,
+    role: user.role,
+    user: {
+      nome: user.nome,
+      telefone: user.telefone,
+      email: user.email,
+    },
+  });
 });
 
 // ================= MIDDLEWARE =================
 function auth(req, res, next) {
   const authHeader = req.headers.authorization;
-  if (!authHeader) return res.sendStatus(401);
+  if (!authHeader) {
+    return res.status(401).json({ error: "Token não enviado" });
+  }
 
   const token = authHeader.split(" ")[1];
 
-  jwt.verify(token, SECRET, (err) => {
+  jwt.verify(token, SECRET, (err, decoded) => {
     if (err) return res.sendStatus(403);
+
+    if (decoded.role !== "admin") {
+      return res.sendStatus(403);
+    }
+
+    req.user = decoded;
     next();
   });
 }
@@ -48,14 +74,7 @@ app.get("/produtos", (req, res) => {
 
 // 📦 CLIENTE ENVIA PEDIDO
 app.post("/pedidos", (req, res) => {
-  const {
-    nome,
-    telefone,
-    endereco,
-    pagamento,
-    itens,
-    total
-  } = req.body;
+  const { nome, telefone, endereco, pagamento, itens, total } = req.body;
 
   if (!nome || !telefone || !endereco || !pagamento || !itens?.length) {
     return res.status(400).json({ error: "Dados inválidos" });
@@ -72,7 +91,7 @@ app.post("/pedidos", (req, res) => {
     itens,
     total,
     status: "novo",
-    data: new Date().toLocaleString("pt-BR")
+    data: new Date().toLocaleString("pt-BR"),
   };
 
   pedidos.push(novoPedido);
@@ -83,9 +102,63 @@ app.post("/pedidos", (req, res) => {
 
 // 🛡️ ADMIN VÊ PEDIDOS
 app.get("/admin/pedidos", auth, (req, res) => {
+  if (req.user.role !== "admin") {
+    return res.status(403).json({ error: "Acesso negado" });
+  }
+
   const pedidos = JSON.parse(fs.readFileSync(pedidosPath));
   res.json(pedidos);
 });
+
+// ❌ EXCLUIR PEDIDO (ADMIN)
+app.delete("/admin/pedidos/:id", auth, (req, res) => {
+  const id = Number(req.params.id);
+
+  const pedidos = JSON.parse(fs.readFileSync(pedidosPath));
+  const novosPedidos = pedidos.filter(p => p.id !== id);
+
+  fs.writeFileSync(pedidosPath, JSON.stringify(novosPedidos, null, 2));
+
+  res.json({ message: "Pedido excluído com sucesso" });
+});
+
+// 🛡️ ADMIN — CADASTRAR PRODUTO
+app.post("/admin/produtos", auth, (req, res) => {
+  const { nome, descricao, preco, imagem, categoria } = req.body;
+
+  if (!nome || !preco || !categoria) {
+    return res.status(400).json({ error: "Dados inválidos" });
+  }
+
+  const produtos = JSON.parse(fs.readFileSync(produtosPath));
+
+  const novoProduto = {
+    id: Date.now(),
+    nome,
+    descricao,
+    preco,
+    imagem,
+    categoria
+  };
+
+  produtos.push(novoProduto);
+  fs.writeFileSync(produtosPath, JSON.stringify(produtos, null, 2));
+
+  res.json(novoProduto);
+});
+
+// 🛡️ ADMIN — EXCLUIR PRODUTO
+app.delete("/admin/produtos/:id", auth, (req, res) => {
+  let produtos = JSON.parse(fs.readFileSync(produtosPath));
+
+  produtos = produtos.filter(p => p.id != req.params.id);
+
+  fs.writeFileSync(produtosPath, JSON.stringify(produtos, null, 2));
+
+  res.json({ message: "Produto excluído" });
+});
+
+
 
 // ================= SERVER =================
 app.listen(3000, () => {

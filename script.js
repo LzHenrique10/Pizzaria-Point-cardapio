@@ -229,7 +229,7 @@ if (checkoutBtn) {
 // ================== HORÁRIO ==================
 function checkoutRestaurantOpen() {
   const h = new Date().getHours();
-  return h >= 10 && h < 22;
+  return h >= 6 && h < 22;
 }
 
 // ================== PRODUTOS ==================
@@ -300,66 +300,9 @@ if (closeMenu) {
   });
 }
 
-// ================== LOGIN ADMIN ==================
-const emailInput = document.getElementById("emailInput");
-const passwordInput = document.getElementById("passwordInput");
-const loginBtn = document.getElementById("loginBtn");
-const painelMenu = document.getElementById("admin-painel-menu");
-
-function mostrarPainel() {
-  if (painelMenu) painelMenu.classList.remove("hidden");
-}
-
-function esconderPainel() {
-  if (painelMenu) painelMenu.classList.add("hidden");
-}
-
-// Login admin
-if (loginBtn) {
-  loginBtn.addEventListener("click", () => {
-    fetch("http://localhost:3000/admin/login", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        email: emailInput.value,
-        senha: passwordInput.value,
-      }),
-    })
-      .then(async (res) => {
-        const data = await res.json();
-        if (!res.ok) throw new Error(data.error || "Login inválido");
-
-        localStorage.setItem("token", data.token);
-        mostrarPainel();
-        alert("Admin logado 😎");
-      })
-      .catch((err) => {
-        localStorage.removeItem("token");
-        esconderPainel();
-        alert(err.message);
-      });
-  });
-}
 
 // Manter login após atualizar a página
-document.addEventListener("DOMContentLoaded", () => {
-  const token = localStorage.getItem("token");
-  if (!token) return esconderPainel();
 
-  fetch("http://localhost:3000/admin", {
-    headers: {
-      Authorization: "Bearer " + token,
-    },
-  })
-    .then((res) => {
-      if (!res.ok) throw new Error();
-      mostrarPainel();
-    })
-    .catch(() => {
-      localStorage.removeItem("token");
-      esconderPainel();
-    });
-});
 
 checkoutBtn.addEventListener("click", function () {
   const address = document.getElementById("address").value;
@@ -428,5 +371,13 @@ if (cancelarClienteBtn) {
   cancelarClienteBtn.addEventListener("click", () => {
     document.getElementById("cliente-modal").classList.add("hidden");
   });
+}
+
+const painelMenu = document.getElementById("admin-painel-menu");
+
+if (localStorage.getItem("role") === "admin") {
+  painelMenu?.classList.remove("hidden");
+} else {
+  painelMenu?.classList.add("hidden");
 }
 

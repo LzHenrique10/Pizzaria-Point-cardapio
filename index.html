@@ -49,21 +49,63 @@
     <meta property="og:site_name" content="PizariaPoint" />
   </head>
   <body>
-    <input id="emailInput" type="email" placeholder="Digite seu email" />
-
-    <input id="passwordInput" type="password" placeholder="Digite sua senha" />
-
-    <button id="loginBtn">Entrar</button>
-
     <!--HEADER-->
     <header
       class="relative w-full h-[420px] bg-zinc-900 bg-home bg-cover bg-center"
     >
+      <div
+        style="
+          position: absolute;
+          top: 24px;
+          right: 40px;
+          display: flex;
+          gap: 24px;
+          z-index: 999;
+          color: white;
+          font-size: 14px;
+          font-weight: 500;
+        "
+      >
+        <a
+          href="login.html"
+          style="
+            color: white;
+            text-decoration: none;
+            border: 1px solid white;
+            padding: 6px 14px;
+            border-radius: 999px;
+            transition: 0.2s;
+          "
+          onmouseover="this.style.background='white'; this.style.color='black'"
+          onmouseout="this.style.background='transparent'; this.style.color='white'"
+        >
+          Entrar
+        </a>
+
+        <a
+          href="cadastro.html"
+          style="
+            color: white;
+            text-decoration: none;
+            border: 1px solid white;
+            padding: 6px 14px;
+            border-radius: 999px;
+            transition: 0.2s;
+          "
+          onmouseover="this.style.background='white'; this.style.color='black'"
+          onmouseout="this.style.background='transparent'; this.style.color='white'"
+        >
+          Criar conta
+        </a>
+      </div>
       <button
         id="menuBtn"
         style="position: absolute; top: 16px; left: 32px; z-index: 89"
       >
-        <i class="fa-solid fa-bars" style="font-size: 32px; color: white"></i>
+        <i
+          class="fa-solid fa-bars hover:scale-110 duration-200"
+          style="font-size: 32px; color: white"
+        ></i>
       </button>
       <div class="w-full h-full flex flex-col justify-center items-center">
         <img
