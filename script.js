@@ -244,7 +244,7 @@ fetch("http://localhost:3000/produtos")
       div.className = "flex gap-2";
 
       div.innerHTML = `
-        <img src="${produto.imagem}" class="w-28 h-28 rounded-md" />
+        <img src="${produto.imagem}" class="w-28 h-28 rounded-md hover:scale-110 hover:-rotate-2 duration-300" />
         <div>
           <p class="font-bold">${produto.nome}</p>
           ${
@@ -252,12 +252,12 @@ fetch("http://localhost:3000/produtos")
               ? `<p class="text-sm">${produto.descricao}</p>`
               : ""
           }
-          <div class="flex justify-between mt-3">
-            <p class="font-bold">R$ ${produto.preco.toFixed(2)}</p>
+          <div class="flex items-center gap-2 justify-between mt-3">
+            <p class="font-bold text-lg">R$ ${produto.preco.toFixed(2)}</p>
             <button class="add-to-cart-btn bg-gray-900 px-5 h-7 rounded"
               data-name="${produto.nome}"
               data-price="${produto.preco}">
-              🛒
+              <i class="fa fa-cart-plus text-white"></i>
             </button>
           </div>
         </div>

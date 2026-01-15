@@ -1,10 +1,34 @@
 [
   {
-    "id": 1768313697326,
-    "nome": "Hamburger Smash",
-    "descricao": "Hamburger artesanal na chapa",
-    "preco": 18.9,
-    "imagem": "hamb-1.png",
+    "id": 1768507395015,
+    "nome": "Pizza",
+    "descricao": "calabresa",
+    "preco": 12,
+    "imagem": "",
     "categoria": "hamburger"
+  },
+  {
+    "id": 1768507579782,
+    "nome": "hamburguer",
+    "descricao": "calabresa",
+    "preco": 45,
+    "imagem": "",
+    "categoria": "bebida"
+  },
+  {
+    "id": 1768507630872,
+    "nome": "humburguer",
+    "descricao": "queijo",
+    "preco": 55,
+    "imagem": "",
+    "categoria": "hamburger"
+  },
+  {
+    "id": 1768508838261,
+    "nome": "Coca cola",
+    "descricao": "Lata 600ml",
+    "preco": 8,
+    "imagem": "",
+    "categoria": "bebida"
   }
 ]
