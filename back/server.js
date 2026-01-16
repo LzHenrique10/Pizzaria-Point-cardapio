@@ -3,6 +3,7 @@ const cors = require("cors");
 const jwt = require("jsonwebtoken");
 const fs = require("fs");
 const path = require("path");
+const multer = require("multer");
 
 const app = express();
 app.use(cors());
@@ -10,8 +11,25 @@ app.use(express.json());
 
 const SECRET = "segredo_super_secreto";
 
-const produtosPath = path.join(__dirname, "produtos.json");
+// const produtosPath = path.join(__dirname, "produtos.json");
 const pedidosPath = path.join(__dirname, "pedidos.json");
+
+// ================= UPLOAD DE IMAGENS =================
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "uploads");
+  },
+  filename: (req, file, cb) => {
+    const ext = path.extname(file.originalname);
+    cb(null, Date.now() + ext);
+  }
+});
+
+const upload = multer({ storage });
+
+// Deixar a pasta uploads pública
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+
 
 // ================= LOGIN ADMIN =================
 
@@ -109,7 +127,7 @@ app.get("/admin/pedidos", auth, (req, res) => {
   const pedidos = JSON.parse(fs.readFileSync(pedidosPath));
   res.json(pedidos);
 });
-
+/*
 // ❌ EXCLUIR PEDIDO (ADMIN)
 app.delete("/admin/pedidos/:id", auth, (req, res) => {
   const id = Number(req.params.id);
@@ -121,12 +139,13 @@ app.delete("/admin/pedidos/:id", auth, (req, res) => {
 
   res.json({ message: "Pedido excluído com sucesso" });
 });
-
+*/
+/*
 // 🛡️ ADMIN — CADASTRAR PRODUTO
-app.post("/admin/produtos", auth, (req, res) => {
-  const { nome, descricao, preco, imagem, categoria } = req.body;
+app.post("/admin/produtos", auth, upload.single("imagem"), (req, res) => {
+  const { nome, descricao, preco, categoria } = req.body;
 
-  if (!nome || !preco || !categoria) {
+  if (!nome || !preco || !categoria || !req.file) {
     return res.status(400).json({ error: "Dados inválidos" });
   }
 
@@ -136,9 +155,9 @@ app.post("/admin/produtos", auth, (req, res) => {
     id: Date.now(),
     nome,
     descricao,
-    preco,
-    imagem,
-    categoria
+    preco: Number(preco),
+    categoria,
+    imagem: "/uploads/" + req.file.filename
   };
 
   produtos.push(novoProduto);
@@ -146,6 +165,7 @@ app.post("/admin/produtos", auth, (req, res) => {
 
   res.json(novoProduto);
 });
+
 
 // 🛡️ ADMIN — EXCLUIR PRODUTO
 app.delete("/admin/produtos/:id", auth, (req, res) => {
@@ -158,6 +178,7 @@ app.delete("/admin/produtos/:id", auth, (req, res) => {
   res.json({ message: "Produto excluído" });
 });
 
+*/
 
 
 // ================= SERVER =================

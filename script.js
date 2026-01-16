@@ -232,6 +232,7 @@ function checkoutRestaurantOpen() {
   return h >= 6 && h < 22;
 }
 
+/*
 // ================== PRODUTOS ==================
 const hamburgers = document.getElementById("menu-hamburgers");
 const bebidas = document.getElementById("menu-bebidas");
@@ -267,7 +268,7 @@ fetch("http://localhost:3000/produtos")
       if (produto.categoria === "bebida") bebidas.appendChild(div);
     });
   });
-
+*/
 // ================== HORÁRIO (COR VERDE / VERMELHA) ==================
 const spanItem = document.getElementById("date-span");
 if (spanItem) {
