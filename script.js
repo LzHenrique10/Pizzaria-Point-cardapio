@@ -10,7 +10,6 @@ const closeModalBtn = document.getElementById("close-modal-btn");
 const addrressIpunt = document.getElementById("address");
 const addrressWarn = document.getElementById("address-warn");
 const pagamentoSelect = document.getElementById("pagamento");
-
 // ================== MODAL CLIENTE ==================
 const clienteModal = document.getElementById("cliente-modal");
 const clienteNomeInput = document.getElementById("cliente-nome");
@@ -229,7 +228,7 @@ if (checkoutBtn) {
 // ================== HORÁRIO ==================
 function checkoutRestaurantOpen() {
   const h = new Date().getHours();
-  return h >= 6 && h < 22;
+  return h >= 16 && h < 22;
 }
 
 /*

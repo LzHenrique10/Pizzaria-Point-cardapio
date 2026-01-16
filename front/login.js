@@ -5,20 +5,21 @@ function login() {
   fetch("http://localhost:3000/login", {
     method: "POST",
     headers: {
-      "Content-Type": "application/json"
+      "Content-Type": "application/json",
     },
     body: JSON.stringify({
       email: emailInput.value,
-      senha: senhaInput.value
-    })
+      senha: senhaInput.value,
+    }),
   })
-    .then(res => {
+    .then((res) => {
       if (!res.ok) throw new Error("Erro de login");
       return res.json();
     })
-    .then(data => {
+    .then((data) => {
       localStorage.setItem("token", data.token);
       localStorage.setItem("role", data.role);
+      localStorage.setItem("user", JSON.stringify(data.user)); // 🔥 FALTAVA ISSO
 
       if (data.role === "admin") {
         window.location.href = "admin.html";
@@ -26,6 +27,7 @@ function login() {
         window.location.href = "index.html";
       }
     })
+
     .catch(() => {
       alert("Email ou senha incorretos");
     });
