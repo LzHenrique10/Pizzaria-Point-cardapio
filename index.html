@@ -48,7 +48,27 @@
     />
     <meta property="og:site_name" content="PizariaPoint" />
   </head>
-  <body class="bg-black">
+  <body>
+    <style>
+      html {
+        scroll-behavior: smooth;
+      }
+
+      #categorias a {
+        text-decoration: none;
+        padding: 6px 14px;
+        border-radius: 999px;
+        border: 1px solid #ddd;
+        color: #333;
+        white-space: nowrap;
+      }
+
+      #categorias a:hover {
+        background: #000;
+        color: #fff;
+      }
+    </style>
+
     <!--HEADER-->
     <header
       class="relative w-full h-[420px] bg-zinc-900 bg-home bg-cover bg-center"
@@ -112,6 +132,31 @@
         </a>
       </div>
 
+      <div
+        id="profile-button"
+        style="
+          display: none;
+          position: absolute;
+          top: 16px;
+          right: 40px;
+          z-index: 15;
+        "
+      >
+        <button
+          onclick="abrirPerfil()"
+          style="
+            background: transparent;
+            border: 1px solid white;
+            color: white;
+            padding: 6px 14px;
+            border-radius: 999px;
+            cursor: pointer;
+          "
+        >
+          <i class="fa-solid fa-user"></i>     Perfil
+        </button>
+      </div>
+
       <button
         id="menuBtn"
         style="position: absolute; top: 16px; left: 32px; z-index: 89"
@@ -128,10 +173,12 @@
           class="w-32 h-32 rounded-full shadow-lg hover:scale-110 duration-200"
         />
         <h1 class="text-3xl mt-4 mb-2 font-bold text-white">Point da Praça</h1>
-        <span class="text-white font-medium"> Praça 10, Centro </span>
+        <span class="text-white font-medium">
+          Rua Francisca Rodrigues, 41 Dias Macedo
+        </span>
         <div class="bg-green-600 px-4 py-1 rounded-lg mt-5" id="date-span">
           <span class="text-white font-medium">
-            Seg á Dom - 18:00 as 22:00
+            Ter a Dom - 18:00 as 23:00
           </span>
         </div>
       </div>
@@ -142,10 +189,32 @@
       Conheça nosso Cardápio
     </h2>
 
+    <div
+      id="categorias"
+      style="
+        display: flex;
+        text-align: center;
+        justify-content: center;
+        gap: 16px;
+        overflow-x: auto;
+        padding: 10px;
+        position: sticky;
+        top: 0;
+        z-index: 20;
+      "
+    >
+      <a href="#pizzas">Pizzas</a>
+      <a href="#pasteis">Pastéis</a>
+      <a href="#calzone">Calzone</a>
+      <a href="#bebidas">Bebidas</a>
+    </div>
+
     <!--INICIO MENU-->
     <div id="menu">
       <div class="mx-auto max-w-7xl px-2 my-2">
-        <h2 class="font-bold text-2xl text-center">Pizzas</h2>
+        <h2 class="font-bold text-2xl text-center" id="pizzas">
+          <i class="fa-solid fa-pizza-slice"></i> Pizzas
+        </h2>
       </div>
       <main
         class="grid grid-cols-1 md:grid-cols-2 gap-7 md:gap-10 mx-auto max-w-7xl px-2 mb-16"
@@ -587,7 +656,7 @@
       </main>
 
       <div class="mx-auto max-w-7xl px-5 my-2">
-        <h2 class="font-bold text-2xl text-center">Pasteis</h2>
+        <h2 class="font-bold text-2xl text-center" id="pasteis">Pasteis</h2>
       </div>
 
       <!--GRID PATEIS-->
@@ -890,7 +959,7 @@
       </div>
 
       <div class="mx-auto max-w-7xl px-5 my-2">
-        <h2 class="font-bold text-2xl text-center">Calzone</h2>
+        <h2 class="font-bold text-2xl text-center" id="calzone">Calzone</h2>
       </div>
 
       <!--GRID CALZONE-->
@@ -898,7 +967,6 @@
         class="grid grid-cols-1 md:grid-cols-2 gap-7 md:gap-10 mx-auto max-w-7xl px-2 mb-16"
         id="menu-calzone"
       >
-
         <!--CALZONE QUEIJO-->
         <div class="flex gap-2">
           <img
@@ -910,9 +978,8 @@
           <div>
             <p class="font-bold">Calzone Queijo</p>
             <p class="text-sm">
-              Nossos Calzones de queijo são feitos com: Massa artesanal
-              crocante e <strong>recheio de queijo</strong> em toda a extensão do
-              pastel.
+              Nossos Calzones de queijo são feitos com: Massa artesanal crocante
+              e <strong>recheio de queijo</strong> em toda a extensão do pastel.
             </p>
 
             <div class="flex items-center gap-2 justify-between mt-3">
@@ -928,7 +995,7 @@
           </div>
         </div>
         <!--FIM CALZONE QUEIJO-->
-    
+
         <!--CALZONE MISTO-->
         <div class="flex gap-2">
           <img
@@ -940,9 +1007,9 @@
           <div>
             <p class="font-bold">Calzone Misto</p>
             <p class="text-sm">
-              Nossos Calzones de misto são feitos com: Massa artesanal
-              crocante e <strong>recheio de queijo e presunto</strong> em toda a extensão do
-              pastel.
+              Nossos Calzones de misto são feitos com: Massa artesanal crocante
+              e <strong>recheio de queijo e presunto</strong> em toda a extensão
+              do pastel.
             </p>
 
             <div class="flex items-center gap-2 justify-between mt-3">
@@ -970,8 +1037,8 @@
           <div>
             <p class="font-bold">Calzone a Moda</p>
             <p class="text-sm">
-              Nossos Calzones de queijo são feitos com: Massa artesanal
-              crocante erecheio de queijo, presunto, frango e milho.
+              Nossos Calzones de queijo são feitos com: Massa artesanal crocante
+              erecheio de queijo, presunto, frango e milho.
             </p>
 
             <div class="flex items-center gap-2 justify-between mt-3">
@@ -987,7 +1054,7 @@
           </div>
         </div>
         <!--FIM CALZONE A MODA-->
-        
+
         <!--CALZONE MISTÃO-->
         <div class="flex gap-2">
           <img
@@ -999,8 +1066,8 @@
           <div>
             <p class="font-bold">Calzone Mistão</p>
             <p class="text-sm">
-              Nossos Calzones de queijo são feitos com: Massa artesanal
-              crocante e recheio de queijo, presunto, calabresa, frango e milho.
+              Nossos Calzones de queijo são feitos com: Massa artesanal crocante
+              e recheio de queijo, presunto, calabresa, frango e milho.
             </p>
 
             <div class="flex items-center gap-2 justify-between mt-3">
@@ -1028,8 +1095,9 @@
           <div>
             <p class="font-bold">Calzone Frango</p>
             <p class="text-sm">
-              Nossos Calzones de queijo são feitos com: Massa artesanal
-              crocante e recheio de frango e milho   em toda extensão do calzone.
+              Nossos Calzones de queijo são feitos com: Massa artesanal crocante
+              e <strong>recheio de frango e milho</strong> em toda extensão do
+              calzone.
             </p>
 
             <div class="flex items-center gap-2 justify-between mt-3">
@@ -1044,10 +1112,241 @@
             </div>
           </div>
         </div>
-        <!--FIM CALZONE A MODA-->
+        <!--FIM CALZONE FRANGO-->
 
-    </div>
+        <!--CALZONE FRANGO CATUPIRY-->
+        <div class="flex gap-2">
+          <img
+            src="./assents/calzone-frango-catupiry.jpg"
+            alt="Calzone de Catupiry"
+            class="w-28 h-28 rounded-md hover:scale-110 hover:-rotate-2 duration-300"
+          />
 
+          <div>
+            <p class="font-bold">Calzone de Catupiry</p>
+            <p class="text-sm">
+              Nossos Calzones de Catupiry são feitos com: Massa artesanal
+              crocante e <strong>recheio de frango e catupiry</strong> em toda
+              extensão do calzone.
+            </p>
+
+            <div class="flex items-center gap-2 justify-between mt-3">
+              <p class="font-bold text-lg">R$ 10,00</p>
+              <button
+                class="bg-gray-900 px-5 rounded add-to-cart-btn"
+                data-name="Calzone de Catupiry"
+                data-price="10.00"
+              >
+                <i class="fa fa-cart-plus text-lg text-white"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+        <!--FIM CALZONE DE CATUPIRY-->
+
+        <!--CALZONE FRANGO COM QUEIJO-->
+        <div class="flex gap-2">
+          <img
+            src="./assents/calzone-frango-queijo.jpg"
+            alt="Calzone Frango"
+            class="w-28 h-28 rounded-md hover:scale-110 hover:-rotate-2 duration-300"
+          />
+
+          <div>
+            <p class="font-bold">Calzone Frango com Queijo</p>
+            <p class="text-sm">
+              Nossos Calzones de queijo são feitos com: Massa artesanal crocante
+              e <strong>recheio de frango e queijo</strong> em toda extensão do
+              calzone.
+            </p>
+
+            <div class="flex items-center gap-2 justify-between mt-3">
+              <p class="font-bold text-lg">R$ 9,00</p>
+              <button
+                class="bg-gray-900 px-5 rounded add-to-cart-btn"
+                data-name="Calzone Frango"
+                data-price="9.00"
+              >
+                <i class="fa fa-cart-plus text-lg text-white"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+        <!--FIM CALZONE FRANGO COM QUEIJO-->
+
+        <!--CALZONE CALABRESA-->
+        <div class="flex gap-2">
+          <img
+            src="./assents/calzone-calabresa.jpg"
+            alt="Calzone Calabresa"
+            class="w-28 h-28 rounded-md hover:scale-110 hover:-rotate-2 duration-300"
+          />
+
+          <div>
+            <p class="font-bold">Calzone Calabresa</p>
+            <p class="text-sm">
+              Nossos Calzones de queijo são feitos com: Massa artesanal crocante
+              e <strong>recheio de calabresa</strong> em toda extensão do
+              calzone.
+            </p>
+
+            <div class="flex items-center gap-2 justify-between mt-3">
+              <p class="font-bold text-lg">R$ 8,00</p>
+              <button
+                class="bg-gray-900 px-5 rounded add-to-cart-btn"
+                data-name="Calzone Calabresa"
+                data-price="8.00"
+              >
+                <i class="fa fa-cart-plus text-lg text-white"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+        <!--FIM CALZONE CALABRESA-->
+
+        <!--CALZONE CALABRESA c/ CHEDDAR-->
+        <div class="flex gap-2">
+          <img
+            src="./assents/calzone-calabresa-cheddar.jpg"
+            alt="Calzone Calabresa com Cheddar"
+            class="w-28 h-28 rounded-md hover:scale-110 hover:-rotate-2 duration-300"
+          />
+
+          <div>
+            <p class="font-bold">Calzone de Calabresa com Cheddar</p>
+            <p class="text-sm">
+              Nossos Calzones de queijo são feitos com: Massa artesanal crocante
+              e <strong>recheio de calabresa e cheddar</strong> em toda extensão
+              do calzone.
+            </p>
+
+            <div class="flex items-center gap-2 justify-between mt-3">
+              <p class="font-bold text-lg">R$ 9,00</p>
+              <button
+                class="bg-gray-900 px-5 rounded add-to-cart-btn"
+                data-name="Calzone Calabresa com Cheddar"
+                data-price="9.00"
+              >
+                <i class="fa fa-cart-plus text-lg text-white"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+        <!--FIM CALZONE CALABRESA COM CHEDDAR-->
+
+        <!--CALZONE PIZZA-->
+        <div class="flex gap-2">
+          <img
+            src="./assents/calzone-pizza.jpg"
+            alt="Calzone Pizza"
+            class="w-28 h-28 rounded-md hover:scale-110 hover:-rotate-2 duration-300"
+          />
+
+          <div>
+            <p class="font-bold">Calzone de Pizza</p>
+            <p class="text-sm">
+              Nossos Calzones de queijo são feitos com: Massa artesanal crocante
+              e<strong>recheio de queijo, presunto, calabresa, tomate, oregano</strong>em toda extensão do calzone.
+            </p>
+
+            <div class="flex items-center gap-2 justify-between mt-3">
+              <p class="font-bold text-lg">R$ 8,00</p>
+              <button
+                class="bg-gray-900 px-5 rounded add-to-cart-btn"
+                data-name="Calzone Pizza"
+                data-price="8.00"
+              >
+                <i class="fa fa-cart-plus text-lg text-white"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+        <!--FIM CALZONE CALABRESA-->
+
+        <!--CALZONE CARNE-->
+        <div class="flex gap-2">
+          <img
+            src="./assents/calzone-carne.jpg"
+            alt="Calzone Carne"
+            class="w-28 h-28 rounded-md hover:scale-110 hover:-rotate-2 duration-300"
+          />
+
+          <div>
+            <p class="font-bold">Calzone de Carne</p>
+            <p class="text-sm">sem ingredientes</p>
+
+            <div class="flex items-center gap-2 justify-between mt-3">
+              <p class="font-bold text-lg">R$ 9,00</p>
+              <button
+                class="bg-gray-900 px-5 rounded add-to-cart-btn"
+                data-name="Calzone Carne"
+                data-price="9.00"
+              >
+                <i class="fa fa-cart-plus text-lg text-white"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+        <!--FIM CALZONE CARNE-->
+
+        <!--CALZONE CARNE COM QUEIJO-->
+        <div class="flex gap-2">
+          <img
+            src="./assents/calzone-carne-queijo.jpg"
+            alt="Calzone Carne com Queijo"
+            class="w-28 h-28 rounded-md hover:scale-110 hover:-rotate-2 duration-300"
+          />
+
+          <div>
+            <p class="font-bold">Calzone de Carne com Queijo</p>
+            <p class="text-sm">sem ingredientes</p>
+
+            <div class="flex items-center gap-2 justify-between mt-3">
+              <p class="font-bold text-lg">R$ 10,00</p>
+              <button
+                class="bg-gray-900 px-5 rounded add-to-cart-btn"
+                data-name="Calzone Carne com Queijo"
+                data-price="10.00"
+              >
+                <i class="fa fa-cart-plus text-lg text-white"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+        <!--FIM CALZONE CARNE com QUEIJO-->
+
+        <!--CALZONE PORTUGUESA-->
+        <div class="flex gap-2">
+          <img
+            src="./assents/calzone-portuguesa.jpg"
+            alt="Calzone Portuguesa"
+            class="w-28 h-28 rounded-md hover:scale-110 hover:-rotate-2 duration-300"
+          />
+
+          <div>
+            <p class="font-bold">Calzone Portuguesa</p>
+            <p class="text-sm">Nossos Calzones Portuguesa são feitos com: Massa artesanal crocante
+              e<strong>recheio de queijo, presunto, calabresa, tomate, cebola, ovo e pimentão</strong> em toda extensão do calzone.</p>
+
+            <div class="flex items-center gap-2 justify-between mt-3">
+              <p class="font-bold text-lg">R$ 10,00</p>
+              <button
+                class="bg-gray-900 px-5 rounded add-to-cart-btn"
+                data-name="Calzone Carne com Queijo"
+                data-price="10.00"
+              >
+                <i class="fa fa-cart-plus text-lg text-white"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+        <!--FIM CALZONE CARNE com QUEIJO-->
+
+      </div>
+
+      <div class="mx-auto max-w-7xl px-2 my-2">
+        <h2 class="font-bold text-2xl text-center" id="bebidas">🥤 Bebidas</h2>
+      </div>
       <!--GRID BEBIDAS-->
       <div
         class="grid grid-cols-1 md:grid-cols-2 gap-7 md:gap-10 mx-auto max-w-7xl px-2 mb-16"
@@ -1207,18 +1506,21 @@
         <nav class="flex flex-col text-lg">
           <a
             href="#"
+            id="btn-contato"
             class="flex items-center gap-2 py-2 border-b border-gray-200 hover:text-blue-600"
           >
             <i class="fa-solid fa-phone"></i> Contato
           </a>
           <a
             href="#"
+            id="btn-localizacao"
             class="flex items-center gap-2 py-2 border-b border-gray-200 hover:text-blue-600"
           >
             <i class="fa-solid fa-map-marker-alt"></i> Localização
           </a>
           <a
             href="#"
+            id="btn-sobre"
             class="flex items-center gap-2 py-2 border-b border-gray-200 hover:text-blue-600"
           >
             <i class="fa-solid fa-users"></i> Sobre nós
@@ -1236,30 +1538,126 @@
 
     <!-- FIM MODAL MENU -->
 
+
+
+    <!-- MODAL INFO (Sobre / Contato / Localização) -->
     <div
-      id="perfil-modal"
-      class="hidden fixed inset-0 bg-black/70 flex items-center justify-center z-50"
+      id="info-modal"
+      style="
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.7);
+        z-index: 200;
+        align-items: center;
+        justify-content: center;
+      "
     >
-      <div class="bg-white rounded-xl w-full max-w-sm p-6 relative">
+      <div
+        style="
+          background: white;
+          padding: 20px;
+          border-radius: 10px;
+          width: 90%;
+          max-width: 400px;
+          position: relative;
+        "
+      >
         <button
-          onclick="fecharPerfil()"
-          class="absolute top-3 right-3 text-gray-500 hover:text-black"
+          id="close-info-modal"
+          style="
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            border: none;
+            background: none;
+            font-size: 18px;
+            cursor: pointer;
+          "
         >
           ✖
         </button>
 
-        <h2 class="text-xl font-bold mb-4 text-center">Meu Perfil</h2>
+        <h2
+          id="info-modal-title"
+          style="font-weight: bold; margin-bottom: 10px"
+        >
+          Título
+        </h2>
 
-        <div class="space-y-2 text-sm">
-          <p><strong>Nome:</strong> <span id="perfil-nome"></span></p>
-          <p><strong>Email:</strong> <span id="perfil-email"></span></p>
-          <p><strong>Telefone:</strong> <span id="perfil-telefone"></span></p>
-          <p><strong>Tipo:</strong> <span id="perfil-role"></span></p>
-        </div>
+        <div id="info-modal-content" style="font-size: 14px">Conteúdo aqui</div>
+      </div>
+    </div>
+
+    <!-- MODAL PERFIL -->
+    <div
+      id="profile-modal"
+      style="
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.6);
+        z-index: 9999;
+        justify-content: center;
+        align-items: center;
+      "
+      onclick="fecharPerfilFora(event)"
+    >
+      <div
+        style="
+          background: #111;
+          color: white;
+          width: 90%;
+          max-width: 360px;
+          padding: 24px;
+          border-radius: 16px;
+          position: relative;
+          font-family: Arial, sans-serif;
+        "
+      >
+        <!-- Botão fechar -->
+        <button
+          onclick="fecharPerfil()"
+          style="
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 18px;
+            cursor: pointer;
+          "
+        >
+          ✕
+        </button>
+
+        <h2 style="margin-bottom: 16px">Meu Perfil</h2>
+
+        <p style="margin-bottom: 8px">
+          <strong>Nome:</strong> <span id="perfil-nome"></span>
+        </p>
+
+        <p style="margin-bottom: 8px">
+          <strong>Email:</strong> <span id="perfil-email"></span>
+        </p>
+
+        <p style="margin-bottom: 20px">
+          <strong>Telefone:</strong> <span id="perfil-telefone"></span>
+        </p>
 
         <button
-          onclick="logout()"
-          class="mt-6 w-full bg-red-600 text-white py-2 rounded-lg hover:bg-red-700 transition"
+          onclick="sairConta()"
+          style="
+            width: 100%;
+            padding: 10px;
+            background: #e11d48;
+            border: none;
+            border-radius: 10px;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+          "
         >
           Sair da conta
         </button>

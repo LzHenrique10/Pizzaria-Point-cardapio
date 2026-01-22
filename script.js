@@ -18,23 +18,17 @@ const salvarClienteBtn = document.getElementById("continuar-sem-login");
 
 let cart = [];
 
-// ================== CLIENTE LOGADO (AUTO) ==================
-const userLogado = JSON.parse(localStorage.getItem("user"));
-
-if (userLogado) {
-  salvarCliente({
-    nome: userLogado.nome,
-    telefone: userLogado.telefone,
-  });
-}
-
 // ================== CLIENTE ==================
 function clienteLogado() {
-  return (
-    localStorage.getItem("user") !== null ||
-    localStorage.getItem("cliente") !== null
-  );
+  // se for admin, NÃO é cliente
+  if (localStorage.getItem("role") === "admin") {
+    return false;
+  }
+
+  return localStorage.getItem("cliente") !== null;
 }
+
+
 
 function salvarCliente(dados) {
   localStorage.setItem("cliente", JSON.stringify(dados));
@@ -194,6 +188,14 @@ if (checkoutBtn) {
       return;
     }
 
+    const clienteStorage = localStorage.getItem("cliente");
+
+    if (!clienteStorage) {
+      cartModal.style.display = "none";
+      abrirModalCliente();
+      return;
+    }
+
     const cliente = JSON.parse(localStorage.getItem("cliente"));
 
     const pedido = {
@@ -241,7 +243,7 @@ if (checkoutBtn) {
 // ================== HORÁRIO ==================
 function checkoutRestaurantOpen() {
   const h = new Date().getHours();
-  return h >= 10 && h < 22;
+  return h >= 18 && h < 23;
 }
 
 /*
@@ -390,38 +392,130 @@ if (localStorage.getItem("role") === "admin") {
 } else {
   painelMenu?.classList.add("hidden");
 }
-/*
-document.addEventListener("DOMContentLoaded", () => {
-  const authButtons = document.getElementById("auth-buttons");
-  const perfilContainer = document.getElementById("perfil-container");
-  const perfilBtn = document.getElementById("perfil-btn");
 
-  const token = localStorage.getItem("token");
-  const role = localStorage.getItem("role");
+const infoModal = document.getElementById("info-modal");
+const infoTitle = document.getElementById("info-modal-title");
+const infoContent = document.getElementById("info-modal-content");
+const closeInfoModal = document.getElementById("close-info-modal");
+
+const btnSobre = document.getElementById("btn-sobre");
+const btnContato = document.getElementById("btn-contato");
+const btnLocalizacao = document.getElementById("btn-localizacao");
+
+function abrirInfoModal(titulo, conteudo) {
+  infoTitle.innerText = titulo;
+  infoContent.innerHTML = conteudo;
+  infoModal.style.display = "flex";
+}
+
+if (btnSobre) {
+  btnSobre.addEventListener("click", () => {
+    abrirInfoModal(
+      "Sobre nós",
+      `
+      Somos a <strong>Point da Praça</strong>, trazendo pizzas e lanches feitos
+      com carinho, qualidade e aquele sabor que todo mundo ama 🍕🔥
+      `,
+    );
+  });
+}
+
+if (btnContato) {
+  btnContato.addEventListener("click", () => {
+    abrirInfoModal(
+      "Contato",
+      `
+      📞 WhatsApp: (85) 991240530 <br>
+      📸 Instagram: @point_dapracapizzaria<br>
+      ⏰ Atendimento: 18h às 23h
+      `,
+    );
+  });
+}
+
+if (btnLocalizacao) {
+  btnLocalizacao.addEventListener("click", () => {
+    abrirInfoModal(
+      "Localização",
+      `
+      📍 Rua Francisca Rodrigues, 41 Dias Macedo <br><br>
+      <a 
+        href="https://www.google.com/maps/place/R.+Francisca+Rodrigues,+41+-+Dias+Macêdo,+Fortaleza+-+CE,+60860-542/@-3.7868402,-38.5306172,17z/data=!3m1!4b1!4m6!3m5!1s0x7c74ee1f4ed4001:0x49ad59ba88228ae4!8m2!3d-3.7868402!4d-38.5280369!16s%2Fg%2F11kb56khp3?entry=ttu&g_ep=EgoyMDI2MDExOS4wIKXMDSoKLDEwMDc5MjA3MUgBUAM%3D" 
+        target="_blank"
+        style="color: blue; text-decoration: underline;"
+      >
+        Ver no Google Maps
+      </a>
+      `,
+    );
+  });
+}
+
+// Fechar no X
+if (closeInfoModal) {
+  closeInfoModal.addEventListener("click", () => {
+    infoModal.style.display = "none";
+  });
+}
+
+// Fechar clicando fora
+if (infoModal) {
+  infoModal.addEventListener("click", (e) => {
+    if (e.target === infoModal) {
+      infoModal.style.display = "none";
+    }
+  });
+}
+
+const authButtons = document.getElementById("auth-buttons");
+const profileButton = document.getElementById("profile-button");
+
+const token = localStorage.getItem("token");
+
+if (token) {
+  // Usuário logado
+  if (authButtons) authButtons.style.display = "none";
+  if (profileButton) profileButton.style.display = "block";
+} else {
+  // Usuário NÃO logado
+  if (authButtons) authButtons.style.display = "flex";
+  if (profileButton) profileButton.style.display = "none";
+}
+
+function abrirPerfil() {
+  const modal = document.getElementById("profile-modal");
+
   const user = JSON.parse(localStorage.getItem("user"));
 
-  if (token && user) {
-    authButtons.style.display = "none";
-    perfilContainer.style.display = "flex";
-  } else {
-    authButtons.style.display = "flex";
-    perfilContainer.style.display = "none";
-  }
+  if (!user) return;
 
-  if (perfilBtn) {
-    perfilBtn.addEventListener("click", () => {
-      document.getElementById("perfil-nome").innerText = user.nome;
-      document.getElementById("perfil-email").innerText = user.email;
-      document.getElementById("perfil-telefone").innerText = user.telefone;
-      document.getElementById("perfil-role").innerText =
-        role === "admin" ? "Dona / Admin" : "Cliente";
+  document.getElementById("perfil-nome").innerText =
+    user.nome || "Não informado";
 
-      document.getElementById("perfil-modal").style.display = "flex";
-    });
-  }
-});
+  document.getElementById("perfil-email").innerText =
+    user.email || "Não informado";
+
+  document.getElementById("perfil-telefone").innerText =
+    user.telefone || "Não informado";
+
+  modal.style.display = "flex";
+}
 
 function fecharPerfil() {
-  document.getElementById("perfil-modal").style.display = "none";
+  document.getElementById("profile-modal").style.display = "none";
 }
-*/
+
+function fecharPerfilFora(event) {
+  if (event.target.id === "profile-modal") {
+    fecharPerfil();
+  }
+}
+
+function sairConta() {
+  localStorage.removeItem("token");
+  localStorage.removeItem("user");
+  localStorage.removeItem("role");
+  localStorage.removeItem("cliente"); // 👈 ESSENCIAL
+
+  location.reload();
+}
