@@ -30,5 +30,13 @@
     "email": "mara@gmail.com",
     "senha": "$2b$10$/tR7bxnr6GPFLNvpiiRdwO5M4hRqsFMFsHpXkInaXc/jI4tuJAd3K",
     "role": "cliente"
+  },
+  {
+    "id": 1769099930255,
+    "nome": "Luiz",
+    "telefone": "85996412345",
+    "email": "luiz@gmail.com",
+    "senha": "$2b$10$HEQ2W7.0L5Ch8vcY1Ub/heALNMEx5vQ8n0RhnJdlKVwNNcgjaAR8G",
+    "role": "cliente"
   }
 ]

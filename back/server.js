@@ -97,7 +97,7 @@ app.get("/produtos", (req, res) => {
 
 // 📦 CLIENTE ENVIA PEDIDO
 app.post("/pedidos", (req, res) => {
-  const { nome, telefone, endereco, pagamento, itens, total } = req.body;
+  const { nome, telefone, endereco, pagamento, itens, total, observacoes } = req.body;
 
   if (!nome || !telefone || !endereco || !pagamento || !itens?.length) {
     return res.status(400).json({ error: "Dados inválidos" });
@@ -105,14 +105,21 @@ app.post("/pedidos", (req, res) => {
 
   const pedidos = JSON.parse(fs.readFileSync(pedidosPath));
 
+  // 🔢 número sequencial
+  const ultimoNumero = pedidos.length > 0
+    ? pedidos[pedidos.length - 1].numero
+    : 0;
+
   const novoPedido = {
-    id: Date.now(),
+    id: Date.now(),               // interno
+    numero: ultimoNumero + 1,     // 👈 sequencial
     nome,
     telefone,
     endereco,
     pagamento,
     itens,
     total,
+    observacoes: observacoes || "",
     status: "novo",
     data: new Date().toLocaleString("pt-BR"),
   };
@@ -120,8 +127,10 @@ app.post("/pedidos", (req, res) => {
   pedidos.push(novoPedido);
   fs.writeFileSync(pedidosPath, JSON.stringify(pedidos, null, 2));
 
-  res.json({ message: "Pedido recebido com sucesso" });
+  res.json({ message: "Pedido recebido com sucesso", numero: novoPedido.numero });
 });
+
+
 
 // 🛡️ ADMIN VÊ PEDIDOS
 app.get("/admin/pedidos", auth, (req, res) => {

@@ -20,15 +20,21 @@ let cart = [];
 
 // ================== CLIENTE ==================
 function clienteLogado() {
-  // se for admin, NÃO é cliente
-  if (localStorage.getItem("role") === "admin") {
-    return false;
-  }
+  const role = localStorage.getItem("role");
+  const user = localStorage.getItem("user");
+  const cliente = localStorage.getItem("cliente");
 
-  return localStorage.getItem("cliente") !== null;
+  // admin pode finalizar pedido sem modal
+  if (role === "admin" && user) return true;
+
+  // cliente com conta
+  if (user) return true;
+
+  // cliente sem conta
+  if (cliente) return true;
+
+  return false;
 }
-
-
 
 function salvarCliente(dados) {
   localStorage.setItem("cliente", JSON.stringify(dados));
@@ -188,15 +194,27 @@ if (checkoutBtn) {
       return;
     }
 
-    const clienteStorage = localStorage.getItem("cliente");
+    let cliente = null;
 
-    if (!clienteStorage) {
+    const role = localStorage.getItem("role");
+    const user = JSON.parse(localStorage.getItem("user"));
+    const clienteAnon = JSON.parse(localStorage.getItem("cliente"));
+
+    const observacoes = document.getElementById("observacoes")?.value || "";
+
+    if (role === "admin" && user) {
+      cliente = { nome: user.nome, telefone: user.telefone };
+    } else if (user) {
+      cliente = { nome: user.nome, telefone: user.telefone };
+    } else if (clienteAnon) {
+      cliente = clienteAnon;
+    } else {
       cartModal.style.display = "none";
       abrirModalCliente();
       return;
     }
 
-    const cliente = JSON.parse(localStorage.getItem("cliente"));
+    const observacoesInput = document.getElementById("observacoes");
 
     const pedido = {
       nome: cliente.nome,
@@ -209,6 +227,7 @@ if (checkoutBtn) {
         preco: item.price,
       })),
       total: cart.reduce((sum, i) => sum + i.price * i.quantity, 0),
+      observacoes: observacoesInput.value || "",
     };
 
     if (!pagamentoSelect.value) {
@@ -236,6 +255,10 @@ if (checkoutBtn) {
         cart = [];
         updateCartModal();
         cartModal.style.display = "none";
+
+        // 👇 LIMPA OBSERVAÇÕES
+        const obsInput = document.getElementById("observacoes");
+        if (obsInput) obsInput.value = "";
       });
   });
 }
@@ -243,7 +266,7 @@ if (checkoutBtn) {
 // ================== HORÁRIO ==================
 function checkoutRestaurantOpen() {
   const h = new Date().getHours();
-  return h >= 18 && h < 23;
+  return h >= 13 && h < 23;
 }
 
 /*

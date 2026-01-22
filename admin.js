@@ -49,7 +49,7 @@ function carregarPedidos() {
 
       pedidos.forEach((pedido) => {
         const div = document.createElement("div");
-        div.setAttribute("data-id", pedido.id); // ✅ ESSENCIAL
+        div.setAttribute("data-numero", pedido.numero);
         div.style.border = "1px solid #e5e7eb";
         div.style.borderRadius = "10px";
         div.style.background = "#fff";
@@ -63,7 +63,7 @@ function carregarPedidos() {
 
         div.innerHTML = `
   <div class="pedido-header">
-    <span>🍕 ${pedido.nome}</span>
+    <span>🍕 Pedido #${pedido.numero} — ${pedido.nome}</span>
     <span>${pedido.data || ""}</span>
   </div>
 
@@ -77,11 +77,17 @@ function carregarPedidos() {
   <ul class="pedido-itens">
     ${pedido.itens.map((i) => `<li>${i.quantidade}x ${i.nome}</li>`).join("")}
   </ul>
-
+        ${
+          pedido.observacoes && pedido.observacoes.trim() !== ""
+            ? `
+  <p class="pedido-obs"><strong>📝 Observações:</strong><br>${pedido.observacoes}</p>
+`
+            : ""
+        }
   <strong>Total:</strong> R$ ${pedido.total.toFixed(2)}
 
   <div class="pedido-actions">
-    <button class="btn-print" onclick="imprimirPedido('${pedido.id}')">
+    <button class="btn-print" onclick="imprimirPedido('${pedido.numero}')">
       🖨️ Imprimir
     </button>
     <button class="btn-delete" onclick="excluirPedido(${pedido.id})">
@@ -122,33 +128,143 @@ function excluirPedido(id) {
 }
 
 function imprimirPedido(id) {
-  const pedidoDiv = document.querySelector(`[data-id="${id}"]`);
+  const pedidoDiv = document.querySelector(`[data-numero="${id}"]`);
   if (!pedidoDiv) return alert("Pedido não encontrado");
 
-  const janela = window.open("", "_blank", "width=300");
+  const numero = id;
+
+  const nome =
+    pedidoDiv
+      .querySelector(".pedido-header span")
+      ?.innerText.split("—")[1]
+      ?.trim() || "";
+
+  const telefone =
+    pedidoDiv.innerHTML.match(/Telefone:<\/strong>(.*?)<\/p>/)?.[1] || "";
+  const endereco =
+    pedidoDiv.innerHTML.match(/Endereço:<\/strong>(.*?)<\/p>/)?.[1] || "";
+  const pagamento =
+    pedidoDiv.innerHTML.match(/Pagamento:<\/strong>(.*?)<\/p>/)?.[1] || "";
+
+  const obsEl = pedidoDiv.querySelector(".pedido-obs");
+  const observacoes = obsEl
+    ? obsEl.innerText.replace("📝 Observações:", "").trim()
+    : "";
+  const total = pedidoDiv.innerHTML.match(/Total:<\/strong>(.*?)$/)?.[1] || "";
+
+  const itens = [...pedidoDiv.querySelectorAll(".pedido-itens li")]
+    .map((li) => `<p>${li.innerText}</p>`)
+    .join("");
+
+  const agora = new Date();
+  const dataHora =
+    agora.toLocaleDateString("pt-BR") +
+    " - " +
+    agora.toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" });
+
+  const janela = window.open("", "_blank", "width=300,height=600");
 
   janela.document.write(`
     <html>
       <head>
-        <title>Pedido</title>
+        <title>Pedido ${numero}</title>
         <style>
-          body { font-family: monospace; font-size: 12px; }
-          h2 { text-align: center; }
-          hr { border: 1px dashed #000; }
+          * {
+            font-family: monospace;
+          }
+
+          body {
+            width: 80mm;
+            padding: 8px;
+            font-size: 12px;
+          }
+
+          h1 {
+            text-align: center;
+            font-size: 16px;
+            margin-bottom: 6px;
+          }
+
+          hr {
+            border: none;
+            border-top: 1px dashed #000;
+            margin: 6px 0;
+          }
+
+          .linha {
+            margin: 4px 0;
+          }
+
+          .itens p {
+            margin-left: 6px;
+          }
+
+          .obs {
+            margin-top: 6px;
+            font-style: italic;
+          }
+
+          .total {
+            text-align: center;
+            font-size: 14px;
+            font-weight: bold;
+            margin-top: 6px;
+          }
+
+          .center {
+            text-align: center;
+            margin-top: 6px;
+          }
         </style>
       </head>
-      <body>
-        <h2>Pizzaria Point da Praça</h2>
-        ${pedidoDiv.innerHTML}
+
+      <body onload="window.print(); window.close();">
+        <h1>PIZZARIA POINT DA PRAÇA</h1>
+
         <hr>
-        <p>Obrigado pela preferência 🍕</p>
+
+        <div class="linha"><strong>PEDIDO Nº:</strong> ${numero}</div>
+        <div class="linha">${dataHora}</div>
+
+        <hr>
+
+        <div class="linha"><strong>Cliente:</strong> ${nome}</div>
+        <div class="linha"><strong>Tel:</strong> ${telefone}</div>
+        <div class="linha"><strong>End:</strong> ${endereco}</div>
+
+        <hr>
+
+        <div class="itens">
+          ${itens}
+        </div>
+
+        <hr>
+
+        <div class="linha"><strong>Pagamento:</strong> ${pagamento}</div>
+        <div class="total">TOTAL: ${total}</div>
+
+        ${
+          observacoes
+            ? `
+          <hr>
+          <div class="obs">
+            <strong>Obs do cliente:</strong><br>
+            ${observacoes}
+          </div>
+        `
+            : ""
+        }
+
+        <hr>
+
+        <div class="center">Obrigado pela preferência 🍕</div>
       </body>
     </html>
   `);
 
   janela.document.close();
-  janela.print();
 }
+
 /*
 function cadastrarProduto() {
   fetch("http://localhost:3000/admin/produtos", {
