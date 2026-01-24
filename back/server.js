@@ -6,8 +6,8 @@ const path = require("path");
 const multer = require("multer");
 const bcrypt = require("bcrypt");
 
-
 const app = express();
+
 app.use(cors());
 app.use(express.json());
 
@@ -16,27 +16,12 @@ const SECRET = "segredo_super_secreto";
 // const produtosPath = path.join(__dirname, "produtos.json");
 const pedidosPath = path.join(__dirname, "pedidos.json");
 
-// ================= UPLOAD DE IMAGENS =================
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, "uploads");
-  },
-  filename: (req, file, cb) => {
-    const ext = path.extname(file.originalname);
-    cb(null, Date.now() + ext);
-  },
-});
-
-const upload = multer({ storage });
-
-// Deixar a pasta uploads pública
-app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 // ================= LOGIN ADMIN =================
 
 const usuariosPath = path.join(__dirname, "usuarios.json");
 
-app.post("/login", async (req, res) => {
+app.post("/api/login", async (req, res) => {
   const { email, senha } = req.body;
 
   const usuarios = JSON.parse(fs.readFileSync(usuariosPath));
@@ -96,7 +81,7 @@ app.get("/produtos", (req, res) => {
 // ================= PEDIDOS =================
 
 // 📦 CLIENTE ENVIA PEDIDO
-app.post("/pedidos", (req, res) => {
+app.post("/api/pedidos", (req, res) => {
   const { nome, telefone, endereco, pagamento, itens, total, observacoes } = req.body;
 
   if (!nome || !telefone || !endereco || !pagamento || !itens?.length) {
@@ -133,7 +118,7 @@ app.post("/pedidos", (req, res) => {
 
 
 // 🛡️ ADMIN VÊ PEDIDOS
-app.get("/admin/pedidos", auth, (req, res) => {
+app.get("/api/admin/pedidos", auth, (req, res) => {
   if (req.user.role !== "admin") {
     return res.status(403).json({ error: "Acesso negado" });
   }
@@ -142,7 +127,7 @@ app.get("/admin/pedidos", auth, (req, res) => {
   res.json(pedidos);
 });
 // ================= CADASTRO DE USUÁRIO =================
-app.post("/cadastro", async (req, res) => {
+app.post("/api/cadastro", async (req, res) => {
   const { nome, telefone, email, senha } = req.body;
 
   const usuarios = JSON.parse(fs.readFileSync(usuariosPath));
@@ -174,7 +159,7 @@ app.post("/cadastro", async (req, res) => {
 
 
 // ❌ EXCLUIR PEDIDO (ADMIN)
-app.delete("/admin/pedidos/:id", auth, (req, res) => {
+app.delete("/api/admin/pedidos/:id", auth, (req, res) => {
   const id = Number(req.params.id);
 
   const pedidos = JSON.parse(fs.readFileSync(pedidosPath));
@@ -226,7 +211,11 @@ app.delete("/admin/produtos/:id", auth, (req, res) => {
 
 */
 
-// ================= SERVER =================
-app.listen(3000, () => {
-  console.log("🔥 Servidor rodando em http://localhost:3000");
+
+
+
+const PORT = 3000;
+
+app.listen(PORT, () => {
+  console.log("Servidor rodando na porta", PORT);
 });
